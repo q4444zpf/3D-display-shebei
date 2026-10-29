@@ -17,6 +17,18 @@ npm run dev -- --port 5173
 
 仓库包含运行所需的模型 JSON 和几何数据，无需另行解压原始模型压缩包。开发依赖、构建产物、日志和自动化验证输出不纳入版本管理。
 
+## 服务器部署
+
+生产环境使用 Nginx 静态托管，网页端口为 `20005`，参考配置位于 `deploy/nginx.conf`。
+
+- 环形水槽入口：`http://39.108.91.166:20005/?scene=ring`
+- 水槽沙盘入口：`http://39.108.91.166:20005/`
+- 发布目录：`/var/www/3d-display-shebei/releases/<release-id>`
+- 当前版本软链接：`/var/www/3d-display-shebei/current`
+- Nginx 配置：`/etc/nginx/conf.d/3d-display-shebei-20005.conf`
+
+更新时先执行 `npm ci` 与 `npm run build`，将 `dist` 内容上传到新的发布目录，再切换 `current` 软链接。原始 ZIP 是解压备份，可不纳入发布包。修改 Nginx 配置后先运行 `nginx -t`，通过后执行 `systemctl reload nginx`。回滚可将 `current` 指回旧发布目录。服务器登录凭据不保存在仓库中。
+
 ## 展示内容
 
 - 沙盘原始三维模型，支持旋转、缩放、俯视、正视、全屏和截图。
